@@ -8,7 +8,7 @@ This repository allows you to build and package gnupg2
 apt-get install build-essential libgmp-dev libunbound-dev m4
 ```
 
-You will also need to install the other build packages for gnupg2 outlined below:
+You will also need to build the following packages:
 
 ```
 https://github.com/charlesportwoodii/libassuan-build
@@ -18,6 +18,23 @@ https://github.com/charlesportwoodii/libpth-build
 https://github.com/charlesportwoodii/libgpgerror-build
 https://github.com/charlesportwoodii/libnettle-build
 https://github.com/charlesportwoodii/gnutls-build
+```
+
+Everything can be run using the following bash script:
+
+```
+apt-get install git build-essential libgmp-dev libunbound-dev m4
+
+for i in libassuan,libksba,libgpgcrypt,libpth,libgpgerror,libnettle,gnutls,gnupg2
+do
+	echo $i
+	git clone https://github.com/charlesportwoodii/$i-build
+	cd ~/$i-build
+	make build
+	make package
+	make clean
+	cd ~
+done
 ```
 
 # Building and Packaging
