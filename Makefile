@@ -37,6 +37,8 @@ gnupg2:
 	make install
 
 package:
+	cp $(SCRIPTPATH)/*-pak /tmp/gnupg-$(VERSION)
+
 	cd /tmp/gnupg-$(VERSION) && \
 	checkinstall \
 	    -D \
