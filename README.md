@@ -25,7 +25,7 @@ Everything can be run using the following bash script:
 ```
 apt-get install git build-essential libgmp-dev libunbound-dev m4 -y
 
-for i in libassuan,libksba,libgpgcrypt,libpth,libgpgerror,libnettle,gnutls,gnupg2
+for i in libassuan libksba libgpgcrypt libpth libgpgerror libnettle gnutls gnupg2
 do
 	echo $i
 	git clone https://github.com/charlesportwoodii/$i-build
