@@ -23,7 +23,7 @@ https://github.com/charlesportwoodii/gnutls-build
 Everything can be run using the following bash script:
 
 ```
-apt-get install git build-essential libgmp-dev libunbound-dev m4 -y
+apt-get install git build-essential libgmp-dev libunbound-dev libtasn1-6 libtasn1-6-dev m4 -y
 
 for i in libassuan libksba libgpgcrypt libpth libgpgerror libnettle gnutls gnupg2
 do
