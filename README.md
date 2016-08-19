@@ -1,6 +1,6 @@
 # GNUPG2 build
 
-[![TravisCI](https://img.shields.io/travis/charlesportwoodii/gnutls2-build.svg?style=flat-square "TravisCI")](https://travis-ci.org/charlesportwoodii/gnutls2-build)
+[![TravisCI](https://img.shields.io/travis/charlesportwoodii/gnupg2-build.svg?style=flat-square "TravisCI")](https://travis-ci.org/charlesportwoodii/gnupg2-build)
 
 This repository allows you to build and package gnupg2
 
