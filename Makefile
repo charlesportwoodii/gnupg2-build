@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 # Dependency Versions
 VERSION?=2.1.15
-RELEASEVER?=1
+RELEASEVER?=2
 
 # Bash data
 SCRIPTPATH=$(shell pwd -P)
@@ -34,13 +34,13 @@ gnupg2:
 		--mandir=/usr/share/man/gnupg/$(VERSION) \
 		--infodir=/usr/share/info/gnupg/$(VERSION) \
 	    --docdir=/usr/share/doc/gnupg/$(VERSION) && \
-	make -j$(CORES) && \
-	make install
+	make -j$(CORES)
 
 fpm_debian:
 	echo "Packaging gnupg for Debian"
 
-	cd /tmp/gnupg-$(VERSION) && make install DESTDIR=/tmp//tmp/gnupg-$(VERSION)
+	mkdir -p /tmp/gnupg-$(VERSION)-install
+	cd /tmp/gnupg-$(VERSION) && make install DESTDIR=/tmp/gnupg-$(VERSION)-install
 
 	mkdir -p /tmp/gnupg-$(VERSION)-install/etc/ld.so.conf.d
 	echo "/usr/local/lib/" > /tmp/gnupg-$(VERSION)-install/etc/ld.so.conf.d/gpg2.conf
@@ -69,6 +69,7 @@ fpm_debian:
 fpm_rpm:
 	echo "Packaging gnupg for RPM"
 
+	mkdir -p /tmp/gnupg-$(VERSION)-install
 	cd /tmp/gnupg-$(VERSION) && make install DESTDIR=/tmp/gnupg-$(VERSION)
 
 	mkdir -p /tmp/gnupg-$(VERSION)-install/etc/ld.so.conf.d
