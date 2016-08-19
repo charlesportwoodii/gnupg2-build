@@ -7,9 +7,6 @@ mv /usr/bin/gpg /usr/bin/gpg1
 ln -svf /usr/local/bin/gpg2 /usr/bin/gpg
 ln -svf /usr/local/bin/gpgv2 /usr/bin/gpgv
 
-# Ensure the linker is setup correct
-echo /usr/local/lib > /etc/ld.so.conf.d/gpg2.conf
-
 # Make sure shared libraries are linked properly
 ldconfig
 

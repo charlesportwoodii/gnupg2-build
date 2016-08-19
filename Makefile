@@ -18,6 +18,7 @@ build: clean gnupg2
 clean:
 	rm -rf /tmp/gnupg-$(VERSION).tar.bz2
 	rm -rf /tmp/gnupg-$(VERSION)
+	rm -rf /tmp/gnupg-$(VERSION)-install
 
 gnupg2:
 	cd /tmp && \
@@ -30,27 +31,59 @@ gnupg2:
 		--sbindir=/usr/local/sbin \
 		--enable-symcryptrun \
 		--enable-large-secmem \
-		--mandir=/usr/share/man/gnupg-$(VERSION) \
-		--infodir=/usr/share/info/gnupg-$(VERSION) \
-	    --docdir=/usr/share/doc/gnupg-$(VERSION) && \
+		--mandir=/usr/share/man/gnupg/$(VERSION) \
+		--infodir=/usr/share/info/gnupg/$(VERSION) \
+	    --docdir=/usr/share/doc/gnupg/$(VERSION) && \
 	make -j$(CORES) && \
 	make install
 
-package:
-	cp $(SCRIPTPATH)/*-pak /tmp/gnupg-$(VERSION)
+fpm_debian:
+	echo "Packaging gnupg for Debian"
 
-	cd /tmp/gnupg-$(VERSION) && \
-	checkinstall \
-	    -D \
-	    --fstrans \
-	    -pkgrelease "$(RELEASEVER)"-"$(RELEASE)" \
-	    -pkgrelease "$(RELEASEVER)"~"$(RELEASE)" \
-	    -pkgname "gnupg2" \
-	    -pkglicense GPLv3 \
-	    -pkggroup GPG \
-	    -maintainer charlesportwoodii@ethreal.net \
-	    -provides "gpg2, dirmngr" \
-	    -requires "libgpg-error, libgcrypt, libksba, libassuan, libpth, gnutls3, libgmp10, libunbound2" \
-		-nodoc \
-	    -pakdir /tmp \
-	    -y
+	cd /tmp/gnupg-$(VERSION) && make install DESTDIR=/tmp//tmp/gnupg-$(VERSION)
+
+	mkdir -p /tmp/gnupg-$(VERSION)-install/etc/ld.so.conf.d
+	echo "/usr/local/lib/" > /tmp/gnupg-$(VERSION)-install/etc/ld.so.conf.d/gpg2.conf
+
+	fpm -s dir \
+		-t deb \
+		-n gnupg2 \
+		-v $(VERSION)-$(RELEASEVER)~$(shell lsb_release --codename | cut -f2) \
+		-C /tmp/gnupg-$(VERSION)-install \
+		-p gnupg2_$(VERSION)-$(RELEASEVER)~$(shell lsb_release --codename | cut -f2)_$(shell arch).deb \
+		-m "charlesportwoodii@erianna.com" \
+		--license "GPLv3" \
+		--url https://github.com/charlesportwoodii/gnupg-build \
+		--description "Lua JIT 2.0" \
+		--depends "libgpg-error > 0" \
+		--depends "libgcrypt > 0" \
+		--depends "libksba > 0" \
+		--depends "libassuan > 0" \
+		--depends "libpth > 0" \
+		--depends "gnutls3 > 0" \
+		--depends "libgmp10 > 0" \
+		--depends "libunbound2  > 0" \
+		--after-install=$(SCRIPTPATH)/debian/postinstall-pak \
+		--deb-systemd-restart-after-upgrade
+
+fpm_rpm:
+	echo "Packaging gnupg for RPM"
+
+	cd /tmp/gnupg-$(VERSION) && make install DESTDIR=/tmp/gnupg-$(VERSION)
+
+	mkdir -p /tmp/gnupg-$(VERSION)-install/etc/ld.so.conf.d
+	echo "/usr/local/lib/" > /tmp/gnupg-$(VERSION)-install/etc/ld.so.conf.d/gpg2.conf
+
+	fpm -s dir \
+		-t rpm \
+		-n gnupg2 \
+		-v $(VERSION)-$(RELEASEVER) \
+		-C /tmp/gnupg-$(VERSION)-install \
+		-p gnupg2_$(VERSION)-$(RELEASEVER)_$(shell arch).rpm \
+		-m "charlesportwoodii@erianna.com" \
+		--license "GPLv3" \
+		--url https://github.com/charlesportwoodii/gnupg-build \
+		--description "Lua JIT 2.0" \
+		--vendor "Charles R. Portwood II" \
+		--rpm-digest sha384 \
+		--rpm-compression gzip
